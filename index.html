@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GiPHY collection</title>
+  <link rel="stylesheet" href="https://bootswatch.com/4/darkly/bootstrap.min.css">
+  <style>
+#display,
+#display1 {
+  border: 2px solid red;
+}    
+  </style>
+</head>
+<body>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="container-fluid border">
+        <h1 class="text-center border">GIPs clips from GIPHY</h1>
+        <form id='form' class="form-inline d-flex justify-content-center">
+          <input type="text" id="search" name="search" placeholder="Enter a search term" class="form-control"/>
+          <input type="submit" class="btn btn-info" value="Search"/>
+          <button id="remove" class="btn btn-danger">Remove clips</button>
+        </form>
+        <div id="display" class="row"></div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="container-fluid border">
+        <h1 class="text-center border">Stickers from GIPHY</h1>
+        <form id='form1' class="form-inline d-flex justify-content-center">
+          <input type="text" id="search1" name="search" placeholder="Enter a search term" class="form-control"/>
+          <input type="submit" class="btn btn-info" value="Search"/>
+          <button id="remove1" class="btn btn-danger">Remove Stickers</button>
+        </form>
+        <div id="display1" class="row"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+const $search = $("#search")
+const $display = $("#display")
+$("#form").on("submit",async function(evt){
+  evt.preventDefault()
+  let searchTerm = $search.val()
+  $search.val("")//clear search box
+  const response=await axios.get("https://api.giphy.com/v1/gifs/search",{params:{q:searchTerm,api_key:"MhAodEJIJxQMxW9XqxKjyXfNYdLoOIym"}})
+  // {data:{data:[{0:{images:{original:{url:'http...'}}}},…],…},…}
+  addGif(response.data)
+})
+function addGif(res){
+  let num = res.data.length
+  if (num) {
+    let i = Math.floor(Math.random() * num)
+    let $newCol = $("<div>",{class:"col-md-6 col-lg-4 col-xl-3 col-12"})
+    $newCol.append($("<img>",{src:res.data[i].images.original.url,class:"w-100"}))
+    $display.append($newCol)
+  }
+}
+$("#remove").on("click",()=>$display.empty())
+/////////////////////////////////////////////////////////////////////////////////////////
+const $search1 = $("#search1")
+const $display1 = $("#display1")
+$("#form1").on("submit",async function(evt){
+  evt.preventDefault()
+  let searchTerm1 = $search1.val()
+  $search1.val("")//clear search box
+  const response1=await axios.get("https://api.giphy.com/v1/stickers/search",{params:{q:searchTerm1,api_key:"MhAodEJIJxQMxW9XqxKjyXfNYdLoOIym"}})
+  // const response1=await axios.get("http://api.giphy.com/v1/stickers/search",{params:{q:searchTerm1,api_key:"DkxT1i5dWhVRBc7taGjzO0fAjOcTNB0u"}})
+  addSticker(response1.data)
+})
+function addSticker(res) {
+  let num = res.data.length
+  if (num) {
+    let i = Math.floor(Math.random() * num)
+    let $newCol = $("<div>",{class:"col-sm-6 col-md-4 col-lg-3 col-xl-2 col-12"})
+    $newCol.append($("<img>",{src:res.data[i].images.original.url,class:"w-100"}))
+    $display1.append($newCol)
+  }
+}
+$("#remove1`").on("click",()=>$display1.empty())
+</script>
+</body>
+</html>
+
+
+
+
